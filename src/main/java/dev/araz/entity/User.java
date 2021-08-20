@@ -3,14 +3,7 @@ package dev.araz.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Column;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.GenerationType;
+import javax.persistence.*;
 import java.sql.Date;
 import java.util.Set;
 
@@ -29,7 +22,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     @Column(name = "registration_date", nullable = false)
