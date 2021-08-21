@@ -3,12 +3,12 @@ package dev.araz.service;
 import dev.araz.entity.Role;
 import dev.araz.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
 
