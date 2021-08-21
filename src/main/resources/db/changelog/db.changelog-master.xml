@@ -13,4 +13,7 @@
     <changeSet id="init_1.0.1" author="araz">
         <sqlFile path="classpath:db/changelog/init-db-with-src-dates.sql"/>
     </changeSet>
+    <changeSet id="test_data_1.0.1" author="araz">
+        <sqlFile path="classpath:db/changelog/init-db-with-src-dates.sql"/>
+    </changeSet>
 </databaseChangeLog>

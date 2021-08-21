@@ -46,13 +46,13 @@ public class Project {
     @ManyToMany(mappedBy = "projects")
     private Set<User> users;
 
-    @Column(name = "description")
-    @Lob
-    private String description;
-
     @Column(name = "created_date", nullable = false)
     private Date createdDate;
 
     @Column(name = "last_modified", nullable = false)
     private Timestamp lastModified;
+
+    @Column(name = "description")
+    @Lob
+    private String description;
 }
