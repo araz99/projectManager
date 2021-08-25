@@ -1,17 +1,16 @@
 package dev.araz.controller;
 
-import dev.araz.entity.Project;
+import dev.araz.dto.ListProjectsRespDTO;
+import dev.araz.dto.ProjectRespDTO;
 import dev.araz.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Max;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/projects")
@@ -25,13 +24,18 @@ public class ProjectController {
     private Integer defaultPageSize;
 
     @GetMapping
-    public Page<Project> allProjects(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-                                     @RequestParam(required = false) @Max(value = 15) Integer pageSize,
-                                     @RequestParam(required = false, defaultValue = "id") String sortByParam,
-                                     @RequestParam(required = false, defaultValue = "asc") String sortType) {
+    public List<ListProjectsRespDTO> allProjects(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+                                                 @RequestParam(required = false) @Max(value = 15) Integer pageSize,
+                                                 @RequestParam(required = false, defaultValue = "id") String sortByParam,
+                                                 @RequestParam(required = false, defaultValue = "asc") String sortType) {
         if (pageSize == null)
             pageSize = defaultPageSize;
         return projectService.getProjects(pageNumber, pageSize, sortByParam, sortType);
+    }
+
+    @GetMapping("{id}")
+    public Optional<ProjectRespDTO> getProject(@PathVariable Long id) {
+        return projectService.getProject(id);
     }
 
     // POST     /projects

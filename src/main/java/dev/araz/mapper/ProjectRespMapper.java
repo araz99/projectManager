@@ -1,30 +1,37 @@
 package dev.araz.mapper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.araz.dto.ProjectRespDTO;
 import dev.araz.entity.Project;
-import dev.araz.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class ProjectRespMapper implements Mapper<ProjectRespDTO, Project> {
 
-    private final ObjectMapper mapper;
+    private final ListTaskRespMapper taskMapper;
+    private final UserProjectRespMapper userMapper;
 
     @Override
     public Project toEntity(ProjectRespDTO projectRespDTO) {
-        return new Project();
+        return null;
     }
 
     @Override
     public ProjectRespDTO toDTO(Project project) {
-//        ProjectRespDTO projectRespDTO = mapper.convertValue(project, ProjectRespDTO.class);
-//        projectRespDTO.setProjectType(project.getProjectType().getProjectTypeName());
-//        projectRespDTO.setLead(project.getLead().getUsername());
-//        projectRespDTO.setQuantityTasks(project.getTasks().size());
-//        projectRespDTO.setQuantityUsers(project.getUsers().size());
-        return new ProjectRespDTO();
+        return new ProjectRespDTO(
+                project.getId(),
+                project.getProjectName(),
+                project.getKey(),
+                project.getProjectType().getProjectTypeName(),
+                project.getLead().getUsername(),
+                project.getTasks().stream().map(taskMapper::toDTO).collect(Collectors.toSet()),
+                project.getEmployees().stream().map(userMapper::toDTO).collect(Collectors.toSet()),
+                project.getCreatedDate(),
+                project.getLastModified(),
+                project.getDescription()
+        );
     }
 }

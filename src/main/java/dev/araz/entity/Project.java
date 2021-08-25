@@ -40,7 +40,7 @@ public class Project {
     @JoinTable(name = "pm_user_projects",
                 joinColumns = @JoinColumn(name = "projects_id"),
                 inverseJoinColumns = @JoinColumn(name = "users_id"))
-    private Set<User> users;
+    private Set<User> employees;
 
     @Column(name = "created_date", nullable = false)
     private Date createdDate;

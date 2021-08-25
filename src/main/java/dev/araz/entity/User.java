@@ -37,7 +37,7 @@ public class User {
     private Collection<Project> ProjectsForLead;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "employees")
     private Set<Project> projects;
 
     @JsonIgnore

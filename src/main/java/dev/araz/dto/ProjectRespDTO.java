@@ -1,8 +1,14 @@
 package dev.araz.dto;
 
+import dev.araz.entity.Task;
+import dev.araz.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -13,6 +19,9 @@ public class ProjectRespDTO {
     private String key;
     private String projectType;
     private String lead;
-    private int quantityTasks;
-    private int quantityUsers;
+    private Set<ListTaskRespDTO> tasks;
+    private Set<UserProjectRespDTO> employees;
+    private Date createdDate;
+    private Timestamp lastModified;
+    private String description;
 }
