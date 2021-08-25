@@ -1,19 +1,18 @@
 package dev.araz.entity;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
+import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "task_status")
-@Data
 @NoArgsConstructor
+@Getter
+@Setter
 public class TaskStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +20,8 @@ public class TaskStatus {
 
     @Column(name = "status_name", nullable = false)
     private String statusName;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "status")
+    private Collection<Task> tasks;
 }

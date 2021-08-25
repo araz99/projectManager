@@ -1,16 +1,20 @@
 package dev.araz.entity;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Collection;
 import java.util.Set;
 
 @Entity
 @Table(name = "pm_user")
-@Data
 @NoArgsConstructor
+@Getter
+@Setter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +32,19 @@ public class User {
     @Column(name = "registration_date", nullable = false)
     private Date registrationDate;
 
-    @ManyToMany
+    @JsonIgnore
+    @OneToMany(mappedBy = "lead")
+    private Collection<Project> ProjectsForLead;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "users")
     private Set<Project> projects;
 
-    @OneToMany
-    private Set<Task> tasks;
+    @JsonIgnore
+    @OneToMany(mappedBy = "executor")
+    private Collection<Task> tasksForExecutor;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "author")
+    private Collection<Task> tasksForAuthor;
 }

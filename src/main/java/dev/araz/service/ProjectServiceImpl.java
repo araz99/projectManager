@@ -10,9 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Component
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
@@ -21,14 +18,13 @@ public class ProjectServiceImpl implements ProjectService {
     private final Mapper<ProjectRespDTO, Project> projectMapper;
 
     @Override
-    public List<ProjectRespDTO> getProjects(Integer pageNumber, Integer pageSize, String sortByParam, String sortType) {
+    public Page<Project> getProjects(Integer pageNumber, Integer pageSize, String sortByParam, String sortType) {
         PageRequest pageRequest;
         if (sortType.equals("desc"))
             pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortByParam).descending().and(Sort.by(sortByParam)));
         else
             pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortByParam).ascending());
 
-        return projectRepository.findAll(pageRequest)
-                .stream().map(projectMapper::toDTO).collect(Collectors.toList());
+        return projectRepository.findAll(pageRequest);
     }
 }

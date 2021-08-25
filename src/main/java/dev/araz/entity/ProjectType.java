@@ -1,19 +1,18 @@
 package dev.araz.entity;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
+import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "project_type")
-@Data
 @NoArgsConstructor
+@Getter
+@Setter
 public class ProjectType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +20,8 @@ public class ProjectType {
 
     @Column(name = "project_type_name", nullable = false)
     private String projectTypeName;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "projectType")
+    private Collection<Project> projects;
 }

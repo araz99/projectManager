@@ -1,19 +1,18 @@
 package dev.araz.entity;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
+import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "task_priority")
-@Data
 @NoArgsConstructor
+@Getter
+@Setter
 public class TaskPriority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +20,8 @@ public class TaskPriority {
 
     @Column(name = "priority_name", nullable = false)
     private String priorityName;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "priority")
+    private Collection<Task> tasks;
 }

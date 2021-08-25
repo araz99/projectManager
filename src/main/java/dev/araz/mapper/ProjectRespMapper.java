@@ -15,16 +15,16 @@ public class ProjectRespMapper implements Mapper<ProjectRespDTO, Project> {
 
     @Override
     public Project toEntity(ProjectRespDTO projectRespDTO) {
-        return mapper.convertValue(projectRespDTO, Project.class);
+        return new Project();
     }
 
     @Override
     public ProjectRespDTO toDTO(Project project) {
-        ProjectRespDTO projectRespDTO = mapper.convertValue(project, ProjectRespDTO.class);
-        projectRespDTO.setProjectType(project.getProjectType().getProjectTypeName());
-        projectRespDTO.setLead(project.getLead().getUsername());
-        projectRespDTO.setQuantityTasks(project.getTasks().size());
-        projectRespDTO.setQuantityUsers(project.getUsers().size());
-        return projectRespDTO;
+//        ProjectRespDTO projectRespDTO = mapper.convertValue(project, ProjectRespDTO.class);
+//        projectRespDTO.setProjectType(project.getProjectType().getProjectTypeName());
+//        projectRespDTO.setLead(project.getLead().getUsername());
+//        projectRespDTO.setQuantityTasks(project.getTasks().size());
+//        projectRespDTO.setQuantityUsers(project.getUsers().size());
+        return new ProjectRespDTO();
     }
 }
