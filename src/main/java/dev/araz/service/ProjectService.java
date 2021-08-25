@@ -15,4 +15,6 @@ public interface ProjectService {
     ResponseEntity<ProjectRespDTO> getProject(Long id);
 
     ResponseEntity<ProjectReqDTOForCreate> addProject(ProjectReqDTOForCreate projectDTO);
+
+    ResponseEntity<ProjectRespDTO> updateProject(Long id, ProjectReqDTOForCreate dto);
 }

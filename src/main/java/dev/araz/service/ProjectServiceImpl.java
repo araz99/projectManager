@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,5 +53,18 @@ public class ProjectServiceImpl implements ProjectService {
     public ResponseEntity<ProjectReqDTOForCreate> addProject(ProjectReqDTOForCreate projectDTO) {
         projectRepository.save(projectMapperToEntity.toEntity(projectDTO));
         return new ResponseEntity<>(projectDTO, HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<ProjectRespDTO> updateProject(Long id, ProjectReqDTOForCreate dto) {
+        Optional<Project> optionalProject = projectRepository.findById(id);
+        if (optionalProject.isEmpty())
+            addProject(dto);
+        Project project = projectMapperToEntity.toEntity(dto);
+        project.setId(id);
+        project.setLastModified(new Timestamp(System.currentTimeMillis()));
+        projectRepository.updateLastModified(new Timestamp(System.currentTimeMillis()), id);
+        projectRepository.update(project.getProjectName(), project.getKey(), project.getProjectType().getId(), project.getLead().getId(), project.getDescription(), id);
+        return new ResponseEntity<>(projectMapperToDTO.toDTO(project), HttpStatus.OK);
     }
 }

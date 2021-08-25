@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Max;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/projects")
@@ -26,27 +25,36 @@ public class ProjectController {
     private Integer defaultPageSize;
 
     @GetMapping
-    public List<ListProjectsRespDTO> allProjects(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-                                                 @RequestParam(required = false) @Max(value = 15) Integer pageSize,
-                                                 @RequestParam(required = false, defaultValue = "id") String sortByParam,
-                                                 @RequestParam(required = false, defaultValue = "asc") String sortType) {
+    public List<ListProjectsRespDTO> allProjects(
+            @RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+            @RequestParam(required = false) @Max(value = 15) Integer pageSize,
+            @RequestParam(required = false, defaultValue = "id") String sortByParam,
+            @RequestParam(required = false, defaultValue = "asc") String sortType) {
         if (pageSize == null)
             pageSize = defaultPageSize;
         return projectService.getProjects(pageNumber, pageSize, sortByParam, sortType);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ProjectRespDTO> getProject(@PathVariable Long id) {
+    public ResponseEntity<ProjectRespDTO> getProject(
+            @PathVariable Long id) {
         return projectService.getProject(id);
     }
 
-    // POST     /projects
     @PostMapping
-    public ResponseEntity<ProjectReqDTOForCreate> addProject(@RequestBody ProjectReqDTOForCreate projectDTO) {
+    public ResponseEntity<ProjectReqDTOForCreate> addProject(
+            @RequestBody ProjectReqDTOForCreate projectDTO) {
         return projectService.addProject(projectDTO);
     }
 
-    // PUT      /projects/{projectId}
+    @PutMapping("{id}")
+    public ResponseEntity<ProjectRespDTO> changeProject(
+            @PathVariable Long id,
+            @RequestBody ProjectReqDTOForCreate dto) {
+        return projectService.updateProject(id, dto);
+    }
 
     // DELETE   /projects/{projectID}
+
+    // GET /projects/search
 }
