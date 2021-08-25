@@ -1,8 +1,6 @@
 package dev.araz.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -12,6 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "project")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class Project {
@@ -19,10 +18,10 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "project_name", nullable = false)
+    @Column(name = "project_name", nullable = false, unique = true)
     private String projectName;
 
-    @Column(name = "key", nullable = false, length = 12)
+    @Column(name = "key", nullable = false, length = 12, unique = true)
     private String key;
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
@@ -38,8 +37,8 @@ public class Project {
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "pm_user_projects",
-                joinColumns = @JoinColumn(name = "projects_id"),
-                inverseJoinColumns = @JoinColumn(name = "users_id"))
+            joinColumns = @JoinColumn(name = "projects_id"),
+            inverseJoinColumns = @JoinColumn(name = "users_id"))
     private Set<User> employees;
 
     @Column(name = "created_date", nullable = false)
@@ -50,4 +49,16 @@ public class Project {
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
+    public Project(String projectName, String key, ProjectType projectType, User lead, Set<Task> tasks, Set<User> employees, Date createdDate, Timestamp lastModified, String description) {
+        this.projectName = projectName;
+        this.key = key;
+        this.projectType = projectType;
+        this.lead = lead;
+        this.tasks = tasks;
+        this.employees = employees;
+        this.createdDate = createdDate;
+        this.lastModified = lastModified;
+        this.description = description;
+    }
 }

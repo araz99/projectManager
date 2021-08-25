@@ -1,10 +1,12 @@
 package dev.araz.controller;
 
 import dev.araz.dto.ListProjectsRespDTO;
+import dev.araz.dto.ProjectReqDTOForCreate;
 import dev.araz.dto.ProjectRespDTO;
 import dev.araz.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,11 +36,15 @@ public class ProjectController {
     }
 
     @GetMapping("{id}")
-    public Optional<ProjectRespDTO> getProject(@PathVariable Long id) {
+    public ResponseEntity<ProjectRespDTO> getProject(@PathVariable Long id) {
         return projectService.getProject(id);
     }
 
     // POST     /projects
+    @PostMapping
+    public ResponseEntity<ProjectReqDTOForCreate> addProject(@RequestBody ProjectReqDTOForCreate projectDTO) {
+        return projectService.addProject(projectDTO);
+    }
 
     // PUT      /projects/{projectId}
 

@@ -18,7 +18,7 @@ public class TaskPriority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "priority_name", nullable = false)
+    @Column(name = "priority_name", nullable = false, unique = true)
     private String priorityName;
 
     @JsonIgnore

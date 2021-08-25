@@ -19,7 +19,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "task_name", nullable = false)
+    @Column(name = "task_name", nullable = false, unique = true)
     private String taskName;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

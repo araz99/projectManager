@@ -1,15 +1,15 @@
 create table pm_user
 (
     id                bigserial    not null primary key,
-    username          varchar(255) not null,
+    username          varchar(255) not null unique,
     password          varchar(255) not null,
     registration_date date         not null
 );
 create table project
 (
     id              bigserial    not null primary key,
-    project_name    varchar(255) not null,
-    key             varchar(12)  not null,
+    project_name    varchar(255) not null unique,
+    key             varchar(12)  not null unique,
     lead_id         int8         not null,
     project_type_id int8         not null,
     created_date    date         not null,
@@ -20,7 +20,7 @@ create table project
 create table task
 (
     id            bigserial    not null primary key,
-    task_name     varchar(255) not null,
+    task_name     varchar(255) not null unique,
     author_id     int8         not null,
     executor_id   int8,
     issue_type_id int8         not null,
@@ -34,27 +34,27 @@ create table task
 create table role
 (
     id   bigserial    not null primary key,
-    name varchar(255) not null
+    name varchar(255) not null unique
 );
 create table project_type
 (
     id                bigserial    not null primary key,
-    project_type_name varchar(255) not null
+    project_type_name varchar(255) not null unique
 );
 create table issue_type
 (
     id              bigserial    not null primary key,
-    issue_type_name varchar(255) not null
+    issue_type_name varchar(255) not null unique
 );
 create table task_priority
 (
     id            bigserial    not null primary key,
-    priority_name varchar(255) not null
+    priority_name varchar(255) not null unique
 );
 create table task_status
 (
     id          bigserial    not null primary key,
-    status_name varchar(255) not null
+    status_name varchar(255) not null unique
 );
 create table pm_user_roles
 (

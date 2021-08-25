@@ -2,6 +2,7 @@ package dev.araz.service;
 
 import dev.araz.dto.UserDTO;
 import dev.araz.entity.User;
+import dev.araz.exception.UserNotExist;
 import dev.araz.mapper.Mapper;
 import dev.araz.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,15 @@ public class UserServiceImpl implements UserService {
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User exists!");
     }
+
+    @Override
+    public User getUserByName(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null)
+            return user;
+        throw new UserNotExist("User with name" + username + " not exists!");
+    }
+
 
     private void save(UserDTO userDTO) {
         User user = userMapper.toEntity(userDTO);

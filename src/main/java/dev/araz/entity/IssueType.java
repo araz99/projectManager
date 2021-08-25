@@ -18,7 +18,7 @@ public class IssueType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "issue_type_name", nullable = false)
+    @Column(name = "issue_type_name", nullable = false, unique = true)
     private String issueTypeName;
 
     @JsonIgnore
