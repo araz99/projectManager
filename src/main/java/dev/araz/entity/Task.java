@@ -14,6 +14,8 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Getter
 @Setter
+@NamedNativeQuery(name = "Task.findAll",
+        query = "select * from task t where t.project_id = ?1", resultClass = Task.class)
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

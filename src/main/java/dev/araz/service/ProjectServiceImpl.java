@@ -47,12 +47,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ListProjectsRespDTO> getProjects(Integer pageNumber, Integer pageSize, String sortByParam, String sortType) {
-        PageRequest pageRequest;
-        if (sortType.equals("desc"))
-            pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortByParam).descending());
-        else
-            pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortByParam).ascending());
-
+        PageRequest pageRequest = getPageRequest(pageNumber, pageSize, sortByParam, sortType);
         return projectRepository.findAll(pageRequest)
                 .stream().map(listProjectMapper::toDTO).collect(Collectors.toList());
     }
@@ -88,11 +83,7 @@ public class ProjectServiceImpl implements ProjectService {
     public List<ProjectRespDTO> search(String projectName, String projectKey, String projectType, String projectLead, Date createdDate, Integer pageNumber, Integer pageSize, String sortByParam, String sortType) {
         ProjectType PType = projectType == null ? null : projectTypeService.getProjectByName(projectType);
         User user = projectLead == null ? null : userService.getUserByName(projectLead);
-        PageRequest pageRequest;
-        if (sortType.equals("desc"))
-            pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortByParam).descending());
-        else
-            pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortByParam).ascending());
+        PageRequest pageRequest = getPageRequest(pageNumber, pageSize, sortByParam, sortType);
         return projectRepository.findAll(
                 has(Project_name, projectName)
                         .and(has(Project_key, projectKey))
@@ -100,5 +91,14 @@ public class ProjectServiceImpl implements ProjectService {
                         .and(has(Project_lead, user))
                         .and(has(Project_createdDate, createdDate)), pageRequest)
                 .stream().map(projectMapperToDTO::toDTO).collect(Collectors.toList());
+    }
+
+    private PageRequest getPageRequest(Integer pageNumber, Integer pageSize, String sortByParam, String sortType) {
+        PageRequest pageRequest;
+        if (sortType.equals("desc"))
+            pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortByParam).descending());
+        else
+            pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortByParam).ascending());
+        return pageRequest;
     }
 }
