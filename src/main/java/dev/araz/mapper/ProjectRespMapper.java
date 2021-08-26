@@ -2,20 +2,12 @@ package dev.araz.mapper;
 
 import dev.araz.dto.ProjectRespDTO;
 import dev.araz.entity.Project;
-import dev.araz.service.ProjectTypeService;
-import dev.araz.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class ProjectRespMapper implements MapperToDTO<ProjectRespDTO, Project> {
-
-    private final ListTaskRespMapper taskMapper;
-    private final UserProjectRespMapper userMapper;
-
 
     @Override
     public ProjectRespDTO toDTO(Project project) {
@@ -25,8 +17,8 @@ public class ProjectRespMapper implements MapperToDTO<ProjectRespDTO, Project> {
                 project.getKey(),
                 project.getProjectType().getProjectTypeName(),
                 project.getLead().getUsername(),
-                project.getTasks().stream().map(taskMapper::toDTO).collect(Collectors.toSet()),
-                project.getEmployees().stream().map(userMapper::toDTO).collect(Collectors.toSet()),
+                project.getTasks().size(),
+                project.getEmployees().size(),
                 project.getCreatedDate(),
                 project.getLastModified(),
                 project.getDescription()
