@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Max;
+import java.sql.Date;
 import java.util.List;
 
 @RestController
@@ -56,5 +57,20 @@ public class ProjectController {
 
     // DELETE   /projects/{projectID}
 
-    // GET /projects/search
+    @GetMapping("/search")
+    public List<ProjectRespDTO> findBooks(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String key,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String lead,
+            @RequestParam(required = false) Date createdDate,
+            @RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+            @RequestParam(required = false) @Max(value = 15) Integer pageSize,
+            @RequestParam(required = false, defaultValue = "id") String sortByParam,
+            @RequestParam(required = false, defaultValue = "asc") String sortType
+    ) {
+        if (pageSize == null)
+            pageSize = defaultPageSize;
+        return projectService.search(name, key, type, lead, createdDate, pageNumber, pageSize, sortByParam, sortType);
+    }
 }
