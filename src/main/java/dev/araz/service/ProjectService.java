@@ -1,8 +1,9 @@
 package dev.araz.service;
 
 import dev.araz.dto.ListProjectsRespDTO;
-import dev.araz.dto.ProjectReqDTOForCreate;
+import dev.araz.dto.ProjectReqDTO;
 import dev.araz.dto.ProjectRespDTO;
+import dev.araz.entity.Project;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +16,11 @@ public interface ProjectService {
 
     ResponseEntity<ProjectRespDTO> getProject(Long id);
 
-    ResponseEntity<ProjectReqDTOForCreate> addProject(ProjectReqDTOForCreate projectDTO);
+    Project getProjectById(Long id);
 
-    ResponseEntity<ProjectRespDTO> updateProject(Long id, ProjectReqDTOForCreate dto);
+    ResponseEntity<ProjectReqDTO> addProject(ProjectReqDTO projectDTO);
+
+    ResponseEntity<ProjectRespDTO> updateProject(Long id, ProjectReqDTO dto);
 
     List<ProjectRespDTO> search(String projectName, String projectKey, String projectType, String projectLead, Date createdDate, Integer pageNumber, Integer pageSize, String sortByParam, String sortType);
 }

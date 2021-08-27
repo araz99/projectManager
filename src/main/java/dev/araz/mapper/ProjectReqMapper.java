@@ -1,6 +1,6 @@
 package dev.araz.mapper;
 
-import dev.araz.dto.ProjectReqDTOForCreate;
+import dev.araz.dto.ProjectReqDTO;
 import dev.araz.entity.Project;
 import dev.araz.service.ProjectTypeService;
 import dev.araz.service.UserService;
@@ -13,13 +13,13 @@ import java.util.Collections;
 
 @Component
 @RequiredArgsConstructor
-public class ProjectReqMapperForCreate implements MapperToEntity<ProjectReqDTOForCreate, Project> {
+public class ProjectReqMapper implements MapperToEntity<ProjectReqDTO, Project> {
 
     private final ProjectTypeService projectTypeService;
     private final UserService userService;
 
     @Override
-    public Project toEntity(ProjectReqDTOForCreate dto) {
+    public Project toEntity(ProjectReqDTO dto) {
         return new Project(
                 dto.getProjectName(),
                 dto.getKey(),

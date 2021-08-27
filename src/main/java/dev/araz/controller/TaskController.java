@@ -1,6 +1,7 @@
 package dev.araz.controller;
 
 import dev.araz.dto.ListTaskRespDTO;
+import dev.araz.dto.TaskReqDTO;
 import dev.araz.dto.TaskRespDTO;
 import dev.araz.entity.Task;
 import dev.araz.service.TaskService;
@@ -42,8 +43,11 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task addProject() {
-        return null;
+    public ResponseEntity<TaskRespDTO> addTask(
+            @PathVariable Long projectId,
+            @RequestBody TaskReqDTO dto
+            ) {
+        return taskService.addTask(projectId, dto);
     }
 
     @PutMapping
@@ -52,7 +56,7 @@ public class TaskController {
     }
 
     @GetMapping("/search")
-    public List<Task> search() {
+    public List<Task> filter() {
         return null;
     }
 

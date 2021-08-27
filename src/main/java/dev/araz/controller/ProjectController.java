@@ -1,7 +1,7 @@
 package dev.araz.controller;
 
 import dev.araz.dto.ListProjectsRespDTO;
-import dev.araz.dto.ProjectReqDTOForCreate;
+import dev.araz.dto.ProjectReqDTO;
 import dev.araz.dto.ProjectRespDTO;
 import dev.araz.service.ProjectService;
 import lombok.RequiredArgsConstructor;
@@ -42,22 +42,22 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<ProjectReqDTOForCreate> addProject(
-            @RequestBody ProjectReqDTOForCreate projectDTO) {
+    public ResponseEntity<ProjectReqDTO> addProject(
+            @RequestBody ProjectReqDTO projectDTO) {
         return projectService.addProject(projectDTO);
     }
 
     @PutMapping("{id}")
     public ResponseEntity<ProjectRespDTO> changeProject(
             @PathVariable Long id,
-            @RequestBody ProjectReqDTOForCreate dto) {
+            @RequestBody ProjectReqDTO dto) {
         return projectService.updateProject(id, dto);
     }
 
     // DELETE   /projects/{projectID}
 
     @GetMapping("/search")
-    public List<ProjectRespDTO> findBooks(
+    public List<ProjectRespDTO> filter(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String key,
             @RequestParam(required = false) String type,

@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectReqDTOForCreate {
-    private String projectName;
-    private String key;
-    private String projectType;
-    private String lead;
+public class TaskReqDTO {
+    private String taskName;
+    private String author;
+    private String issueType;
+    private String priority;
     private String description;
 }

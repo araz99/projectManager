@@ -12,9 +12,9 @@ public class ListTaskRespMapper implements MapperToDTO<ListTaskRespDTO, Task> {
                 task.getId(),
                 task.getTaskName(),
                 task.getAuthor().getUsername(),
-                task.getExecutor().getUsername(),
+                task.getExecutor() == null ? "" : task.getExecutor().getUsername(),
                 task.getIssueType().getIssueTypeName(),
-                task.getPriority().getPriorityName(),
+                task.getPriority() == null ? "" : task.getPriority().getPriorityName(),
                 task.getStatus().getStatusName()
         );
     }

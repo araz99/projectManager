@@ -59,4 +59,15 @@ public class Task {
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
+    public Task(String taskName, User author, IssueType issueType, TaskPriority priority, TaskStatus status, Date createdDate, Timestamp lastModified, String description) {
+        this.taskName = taskName;
+        this.author = author;
+        this.issueType = issueType;
+        this.priority = priority;
+        this.status = status;
+        this.createdDate = createdDate;
+        this.lastModified = lastModified;
+        this.description = description;
+    }
 }

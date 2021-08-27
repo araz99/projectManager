@@ -1,14 +1,16 @@
 package dev.araz.service;
 
 import dev.araz.dto.ListProjectsRespDTO;
-import dev.araz.dto.ProjectReqDTOForCreate;
+import dev.araz.dto.ProjectReqDTO;
 import dev.araz.dto.ProjectRespDTO;
 import dev.araz.entity.Project;
 import dev.araz.entity.ProjectType;
 import dev.araz.entity.User;
+import dev.araz.exception.NotProjectException;
 import dev.araz.mapper.MapperToDTO;
 import dev.araz.mapper.MapperToEntity;
 import dev.araz.repository.ProjectRepository;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -32,7 +34,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final MapperToDTO<ListProjectsRespDTO, Project> listProjectMapper;
     private final MapperToDTO<ProjectRespDTO, Project> projectMapperToDTO;
-    private final MapperToEntity<ProjectReqDTOForCreate, Project> projectMapperToEntity;
+    private final MapperToEntity<ProjectReqDTO, Project> projectMapperToEntity;
     private final ProjectTypeService projectTypeService;
     private final UserService userService;
 
@@ -61,13 +63,21 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ResponseEntity<ProjectReqDTOForCreate> addProject(ProjectReqDTOForCreate projectDTO) {
+    public Project getProjectById(Long id) {
+        Optional<Project> project = projectRepository.findById(id);
+        if (project.isPresent())
+            return project.get();
+        throw new NotProjectException("Project id = " + id + " not exists!");
+    }
+
+    @Override
+    public ResponseEntity<ProjectReqDTO> addProject(ProjectReqDTO projectDTO) {
         projectRepository.save(projectMapperToEntity.toEntity(projectDTO));
         return new ResponseEntity<>(projectDTO, HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<ProjectRespDTO> updateProject(Long id, ProjectReqDTOForCreate dto) {
+    public ResponseEntity<ProjectRespDTO> updateProject(Long id, ProjectReqDTO dto) {
         Optional<Project> optionalProject = projectRepository.findById(id);
         if (optionalProject.isEmpty())
             addProject(dto);
