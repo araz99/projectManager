@@ -57,7 +57,7 @@ public class ProjectServiceImpl implements ProjectService {
         Optional<ProjectRespDTO> projectRespDTO = projectRepository.findById(id).map(projectMapperToDTO::toDTO).stream().findFirst();
         if (projectRespDTO.isPresent())
             return new ResponseEntity<>(projectRespDTO.get(), HttpStatus.OK);
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ("Project id " + id + "  is missing!"));
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Project id = " + id + "  is not exists!");
     }
 
     @Override
