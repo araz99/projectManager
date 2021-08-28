@@ -1,16 +1,17 @@
 package dev.araz.specification;
 
-import dev.araz.entity.Project;
 import org.springframework.data.jpa.domain.Specification;
 
-public class ProjectSpecification {
+public class Specifications<E> {
 
-    public static <T> Specification<Project> has(String fieldName, T field) {
+    private Specifications() {}
+
+    public static <E, F> Specification<E> has(String fieldName, F field) {
         return field == null ? emptySpecification()
                 : (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get(fieldName), field);
     }
 
-    private static Specification<Project> emptySpecification() {
+    private static <E> Specification<E> emptySpecification() {
         return (root, criteriaQuery, criteriaBuilder) -> null;
     }
 }

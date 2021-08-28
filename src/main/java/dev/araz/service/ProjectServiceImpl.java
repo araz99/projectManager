@@ -10,7 +10,7 @@ import dev.araz.exception.NotProjectException;
 import dev.araz.mapper.MapperToDTO;
 import dev.araz.mapper.MapperToEntity;
 import dev.araz.repository.ProjectRepository;
-import javassist.NotFoundException;
+import dev.araz.specification.Specifications;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -24,8 +24,6 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static dev.araz.specification.ProjectSpecification.*;
 
 @Component
 @RequiredArgsConstructor
@@ -95,11 +93,11 @@ public class ProjectServiceImpl implements ProjectService {
         User user = projectLead == null ? null : userService.getUserByName(projectLead);
         PageRequest pageRequest = getPageRequest(pageNumber, pageSize, sortByParam, sortType);
         return projectRepository.findAll(
-                has(Project_name, projectName)
-                        .and(has(Project_key, projectKey))
-                        .and(has(Project_type, PType))
-                        .and(has(Project_lead, user))
-                        .and(has(Project_createdDate, createdDate)), pageRequest)
+                Specifications.<Project, String>has(Project_name, projectName)
+                        .and(Specifications.has(Project_key, projectKey))
+                        .and(Specifications.has(Project_type, PType))
+                        .and(Specifications.has(Project_lead, user))
+                        .and(Specifications.has(Project_createdDate, createdDate)), pageRequest)
                 .stream().map(projectMapperToDTO::toDTO).collect(Collectors.toList());
     }
 

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Max;
+import java.sql.Date;
 import java.util.List;
 
 @RestController
@@ -47,7 +48,7 @@ public class TaskController {
     public ResponseEntity<TaskRespDTO> addTask(
             @PathVariable Long projectId,
             @RequestBody TaskReqDTO dto
-            ) {
+    ) {
         return taskService.addTask(projectId, dto);
     }
 
@@ -61,8 +62,36 @@ public class TaskController {
     }
 
     @GetMapping("/search")
-    public List<Task> filter() {
-        return null;
+    public List<TaskRespDTO> filter(
+            @PathVariable Long projectId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) String executor,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String priority,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) Date createdDate,
+            @RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+            @RequestParam(required = false) @Max(value = 15) Integer pageSize,
+            @RequestParam(required = false, defaultValue = "id") String sortByParam,
+            @RequestParam(required = false, defaultValue = "asc") String sortType
+    ) {
+        if (pageSize == null)
+            pageSize = defaultPageSize;
+        return taskService.search(
+                projectId,
+                name,
+                author,
+                executor,
+                type,
+                priority,
+                status,
+                createdDate,
+                pageNumber,
+                pageSize,
+                sortByParam,
+                sortType
+        );
     }
 
     //DELETE task

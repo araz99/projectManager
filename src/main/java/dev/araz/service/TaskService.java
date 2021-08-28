@@ -7,6 +7,7 @@ import dev.araz.dto.TaskRespDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -18,4 +19,6 @@ public interface TaskService {
     ResponseEntity<TaskRespDTO> addTask(Long projectId, TaskReqDTO dto);
 
     ResponseEntity updateTask(Long projectId, Long id, TaskReqDTOForUpdate dto);
+
+    List<TaskRespDTO> search(Long projectId, String name, String author, String executor, String type, String priority, String status, Date createdDate, Integer pageNumber, Integer pageSize, String sortByParam, String sortType);
 }

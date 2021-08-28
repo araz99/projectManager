@@ -80,21 +80,4 @@ public class Task {
         this.lastModified = lastModified;
         this.description = description;
     }
-
-    @Override
-    public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", taskName='" + taskName + '\'' +
-                ", author=" + author +
-                ", executor=" + executor +
-                ", issueType=" + issueType +
-                ", project=" + project +
-                ", priority=" + priority +
-                ", status=" + status +
-                ", createdDate=" + createdDate +
-                ", lastModified=" + lastModified +
-                ", description='" + description + '\'' +
-                '}';
-    }
 }

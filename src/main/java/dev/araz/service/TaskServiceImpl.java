@@ -4,10 +4,11 @@ import dev.araz.dto.ListTaskRespDTO;
 import dev.araz.dto.TaskReqDTO;
 import dev.araz.dto.TaskReqDTOForUpdate;
 import dev.araz.dto.TaskRespDTO;
-import dev.araz.entity.Task;
+import dev.araz.entity.*;
 import dev.araz.mapper.MapperToDTO;
 import dev.araz.mapper.MapperToEntity;
 import dev.araz.repository.TaskRepository;
+import dev.araz.specification.Specifications;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,10 +28,27 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final ProjectService projectService;
+    private final UserService userService;
+    private final IssueTypeService typeService;
+    private final TaskPriorityService priorityService;
+    private final TaskStatusService statusService;
     private final MapperToEntity<TaskReqDTO, Task> taskReqMapper;
     private final MapperToEntity<TaskReqDTOForUpdate, Task> updateTaskMapper;
     private final MapperToDTO<ListTaskRespDTO, Task> taskListMapper;
     private final MapperToDTO<TaskRespDTO, Task> taskRespMapper;
+
+    // Task field names for Spring Specification
+    private static final String Task_name = "taskName";
+    private static final String Task_author = "author";
+    private static final String Task_executor = "executor";
+    private static final String Task_type = "issueType";
+    private static final String Task_project = "project";
+    private static final String Task_priority = "priority";
+    private static final String Task_status = "status";
+    private static final String Task_date = "createdDate";
+    private static final String Task_last = "lastModified";
+    private static final String Task_description = "description";
+
 
     @Override
     public List<ListTaskRespDTO> getTasks(Long projectId, Integer page, Integer size, String sortByParam, String type) {
@@ -62,8 +81,6 @@ public class TaskServiceImpl implements TaskService {
         if (optionalTask.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task id = " + id + " not exists!");
         Task task = updateTaskMapper.toEntity(dto);
-        System.out.println(dto);
-        System.out.println(task);
         taskRepository.update(
                 task.getTaskName(),
                 task.getExecutor().getId(),
@@ -74,6 +91,28 @@ public class TaskServiceImpl implements TaskService {
                 projectId,
                 id);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @Override
+    public List<TaskRespDTO> search(Long projectId, String name, String author, String executor, String type, String priority, String status, Date createdDate, Integer pageNumber, Integer pageSize, String sortByParam, String sortType) {
+        Project project = projectService.getProjectById(projectId);
+        User taskAuthor = author == null ? null : userService.getUserByName(author);
+        User taskExecutor = executor == null ? null : userService.getUserByName(executor);
+        IssueType taskType = type == null ? null : typeService.getIssueTypeByName(type);
+        TaskPriority taskPriority = priority == null ? null : priorityService.getPriorityByName(priority);
+        TaskStatus taskStatus = status == null ? null : statusService.getStatusByName(status);
+        return taskRepository.findAll(
+                Specifications.<Task, Project>has(Task_project, project)
+                        .and(Specifications.has(Task_name, name))
+                        .and(Specifications.has(Task_author, taskAuthor))
+                        .and(Specifications.has(Task_executor, taskExecutor))
+                        .and(Specifications.has(Task_type, taskType))
+                        .and(Specifications.has(Task_priority, taskPriority))
+                        .and(Specifications.has(Task_status, taskStatus))
+                        .and(Specifications.has(Task_date, createdDate)),
+                getPageRequest(pageNumber, pageSize, sortByParam, sortType)
+        )
+                .stream().map(taskRespMapper::toDTO).collect(Collectors.toList());
     }
 
     private PageRequest getPageRequest(Integer page, Integer size, String sortByParam, String type) {
