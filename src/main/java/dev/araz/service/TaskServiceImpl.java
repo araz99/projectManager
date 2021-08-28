@@ -2,6 +2,7 @@ package dev.araz.service;
 
 import dev.araz.dto.ListTaskRespDTO;
 import dev.araz.dto.TaskReqDTO;
+import dev.araz.dto.TaskReqDTOForUpdate;
 import dev.araz.dto.TaskRespDTO;
 import dev.araz.entity.Task;
 import dev.araz.mapper.MapperToDTO;
@@ -26,6 +27,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final ProjectService projectService;
     private final MapperToEntity<TaskReqDTO, Task> taskReqMapper;
+    private final MapperToEntity<TaskReqDTOForUpdate, Task> updateTaskMapper;
     private final MapperToDTO<ListTaskRespDTO, Task> taskListMapper;
     private final MapperToDTO<TaskRespDTO, Task> taskRespMapper;
 
@@ -52,6 +54,26 @@ public class TaskServiceImpl implements TaskService {
         saveTask.setProject(projectService.getProjectById(projectId));
         Task savedTask = taskRepository.save(saveTask);
         return new ResponseEntity<>(taskRespMapper.toDTO(savedTask), HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity updateTask(Long projectId, Long id, TaskReqDTOForUpdate dto) {
+        Optional<Task> optionalTask = taskRepository.findById(projectId, id);
+        if (optionalTask.isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task id = " + id + " not exists!");
+        Task task = updateTaskMapper.toEntity(dto);
+        System.out.println(dto);
+        System.out.println(task);
+        taskRepository.update(
+                task.getTaskName(),
+                task.getExecutor().getId(),
+                task.getIssueType().getId(),
+                task.getPriority().getId(),
+                task.getStatus().getId(),
+                task.getDescription(),
+                projectId,
+                id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     private PageRequest getPageRequest(Integer page, Integer size, String sortByParam, String type) {

@@ -70,4 +70,31 @@ public class Task {
         this.lastModified = lastModified;
         this.description = description;
     }
+
+    public Task(String taskName, User executor, IssueType issueType, TaskPriority priority, TaskStatus status, Timestamp lastModified, String description) {
+        this.taskName = taskName;
+        this.executor = executor;
+        this.issueType = issueType;
+        this.priority = priority;
+        this.status = status;
+        this.lastModified = lastModified;
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", taskName='" + taskName + '\'' +
+                ", author=" + author +
+                ", executor=" + executor +
+                ", issueType=" + issueType +
+                ", project=" + project +
+                ", priority=" + priority +
+                ", status=" + status +
+                ", createdDate=" + createdDate +
+                ", lastModified=" + lastModified +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

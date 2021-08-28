@@ -2,6 +2,7 @@ package dev.araz.service;
 
 import dev.araz.dto.ListTaskRespDTO;
 import dev.araz.dto.TaskReqDTO;
+import dev.araz.dto.TaskReqDTOForUpdate;
 import dev.araz.dto.TaskRespDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,4 +16,6 @@ public interface TaskService {
     ResponseEntity<TaskRespDTO> getTask(Long projectId, Long id);
 
     ResponseEntity<TaskRespDTO> addTask(Long projectId, TaskReqDTO dto);
+
+    ResponseEntity updateTask(Long projectId, Long id, TaskReqDTOForUpdate dto);
 }

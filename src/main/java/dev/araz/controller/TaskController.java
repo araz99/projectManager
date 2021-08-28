@@ -2,6 +2,7 @@ package dev.araz.controller;
 
 import dev.araz.dto.ListTaskRespDTO;
 import dev.araz.dto.TaskReqDTO;
+import dev.araz.dto.TaskReqDTOForUpdate;
 import dev.araz.dto.TaskRespDTO;
 import dev.araz.entity.Task;
 import dev.araz.service.TaskService;
@@ -50,9 +51,13 @@ public class TaskController {
         return taskService.addTask(projectId, dto);
     }
 
-    @PutMapping
-    public Task changeTask() {
-        return null;
+    @PutMapping("{id}")
+    public ResponseEntity changeTask(
+            @PathVariable Long projectId,
+            @PathVariable Long id,
+            @RequestBody TaskReqDTOForUpdate dto
+    ) {
+        return taskService.updateTask(projectId, id, dto);
     }
 
     @GetMapping("/search")

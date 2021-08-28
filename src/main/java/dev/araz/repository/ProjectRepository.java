@@ -20,8 +20,8 @@ public interface ProjectRepository
     @Transactional
     void update(String name, String key, Long type, Long lead, String description, Long id);
 
-    @Transactional
     @Modifying
     @Query(value = "update project as pr set last_modified = ?1 where pr.id = ?2", nativeQuery = true)
+    @Transactional
     void updateLastModified(Timestamp lastModified, Long id);
 }
