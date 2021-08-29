@@ -8,6 +8,10 @@ import dev.araz.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -15,11 +19,21 @@ import java.sql.Date;
 
 @Component
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
-    private final Mapper<UserDTO,User> userMapper;
+    private final Mapper<UserDTO, User> userMapper;
     private final RoleService roleService;
+
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
+        if (user == null)
+            throw new UsernameNotFoundException(String.format("User '%s' not found", username));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles());
+    }
+
     @Override
     public ResponseEntity<UserDTO> addNewUser(UserDTO userDTO) {
         User user = userRepository.findByUsername(userDTO.getUsername());
@@ -42,7 +56,8 @@ public class UserServiceImpl implements UserService {
     private void save(UserDTO userDTO) {
         User user = userMapper.toEntity(userDTO);
         user.setRegistrationDate(new Date(System.currentTimeMillis()));
-        user.setRoles(roleService.setRole("USER"));
+        user.setPassword(new BCryptPasswordEncoder().encode(userDTO.getPassword()));
+        user.setRoles(roleService.setRole("ROLE_USER"));
         userRepository.save(user);
     }
 }

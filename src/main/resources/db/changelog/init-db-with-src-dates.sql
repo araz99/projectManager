@@ -1,6 +1,6 @@
 insert into role (id, name)
-values (1, 'USER'),
-       (2, 'ADMIN');
+values (1, 'ROLE_USER'),
+       (2, 'ROLE_ADMIN');
 
 insert into issue_type (id, issue_type_name)
 values (1, 'improvement'),
