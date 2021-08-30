@@ -7,10 +7,12 @@
     <artifactId>projectManager</artifactId>
     <version>1.0.1</version>
 
-    <!-- java11, springBoot, springMVC, Swagger, SpringData, SpringJDBC, SpringSecurity -->
-    <!--  postgresql, lombok, liquibase-->
     <properties>
         <java.version>11</java.version>
+        <javax.validation.version>2.0.1.Final</javax.validation.version>
+        <hibernate.validator.version>6.1.5.Final</hibernate.validator.version>
+        <springfox.swagger2.version>2.9.2</springfox.swagger2.version>
+        <springfox.swagger2.ui.version>2.9.2</springfox.swagger2.ui.version>
     </properties>
 
     <parent>
@@ -59,21 +61,27 @@
         </dependency>
 
         <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax.validation.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>6.0.10.Final</version>
+            <version>${hibernate.validator.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
-            <version>2.9.2</version>
+            <version>${springfox.swagger2.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.9.2</version>
+            <version>${springfox.swagger2.ui.version}</version>
         </dependency>
 
         <dependency>

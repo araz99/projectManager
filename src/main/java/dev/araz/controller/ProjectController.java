@@ -11,6 +11,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.sql.Date;
 import java.util.List;
 
@@ -26,11 +29,17 @@ public class ProjectController {
     private Integer defaultPageSize;
 
     @GetMapping
-    public List<ListProjectsRespDTO> allProjects(
-            @RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-            @RequestParam(required = false) @Max(value = 15) Integer pageSize,
-            @RequestParam(required = false, defaultValue = "id") String sortByParam,
-            @RequestParam(required = false, defaultValue = "asc") String sortType) {
+    public List<ListProjectsRespDTO> getAllProjects(
+            @RequestParam(required = false, defaultValue = "0")
+            @Min(value = 0L, message = "{page.number}") Integer pageNumber,
+
+            @RequestParam(required = false)
+            @Min(value = 3L, message = "{page.size}") Integer pageSize,
+
+            @RequestParam(required = false, defaultValue = "id")
+            @NotBlank @Pattern(regexp = "(id|projectName|key|projectType|lead|createdDate|lastModified)", message = "{sort.byParam}") String sortByParam,
+            @RequestParam(required = false, defaultValue = "asc")
+            @NotBlank @Pattern(regexp = "\\b(asc|desc)", message = "{sort.type}") String sortType) {
         if (pageSize == null)
             pageSize = defaultPageSize;
         return projectService.getProjects(pageNumber, pageSize, sortByParam, sortType);

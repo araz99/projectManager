@@ -102,11 +102,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     private PageRequest getPageRequest(Integer pageNumber, Integer pageSize, String sortByParam, String sortType) {
-        PageRequest pageRequest;
         if (sortType.equals("desc"))
-            pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortByParam).descending());
+            return PageRequest.of(pageNumber, pageSize, Sort.by(sortByParam).descending());
         else
-            pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortByParam).ascending());
-        return pageRequest;
+            return PageRequest.of(pageNumber, pageSize, Sort.by(sortByParam).ascending());
     }
 }
