@@ -47,7 +47,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ListProjectsRespDTO> getProjects(Integer pageNumber, Integer pageSize, String sortByParam, String sortType) {
-        PageRequest pageRequest = getPageRequest(pageNumber, pageSize, sortByParam, sortType);
+        PageRequest pageRequest = getPageRequest(pageNumber, pageSize, sortByParam.trim().toLowerCase(), sortType.trim().toLowerCase());
         return projectRepository.findAll(pageRequest)
                 .stream().map(listProjectMapper::toDTO).collect(Collectors.toList());
     }
@@ -89,12 +89,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectRespDTO> search(String projectName, String projectKey, String projectType, String projectLead, Date createdDate, Integer pageNumber, Integer pageSize, String sortByParam, String sortType) {
-        ProjectType PType = projectType == null ? null : projectTypeService.getProjectByName(projectType);
-        User user = projectLead == null ? null : userService.getUserByName(projectLead);
-        PageRequest pageRequest = getPageRequest(pageNumber, pageSize, sortByParam, sortType);
+        ProjectType PType = projectType == null ? null : projectTypeService.getProjectByName(projectType.trim());
+        User user = projectLead == null ? null : userService.getUserByName(projectLead.trim());
+        PageRequest pageRequest = getPageRequest(pageNumber, pageSize, sortByParam.trim(), sortType.trim());
         return projectRepository.findAll(
-                Specifications.<Project, String>has(Project_name, projectName)
-                        .and(Specifications.has(Project_key, projectKey))
+                Specifications.<Project, String>has(Project_name, projectName == null ? null : projectName.trim())
+                        .and(Specifications.has(Project_key, projectKey == null ? null : projectKey.trim()))
                         .and(Specifications.has(Project_type, PType))
                         .and(Specifications.has(Project_lead, user))
                         .and(Specifications.has(Project_createdDate, createdDate)), pageRequest)

@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Max;
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -37,45 +37,63 @@ public class ProjectController {
             @Min(value = 3L, message = "{page.size}") Integer pageSize,
 
             @RequestParam(required = false, defaultValue = "id")
-            @NotBlank @Pattern(regexp = "(id|projectName|key|projectType|lead|createdDate|lastModified)", message = "{sort.byParam}") String sortByParam,
+            @NotBlank @Pattern(regexp = "(?i)(\\s*id\\s*|\\s*projectName\\s*|\\s*key\\s*|\\s*projectType\\s*|\\s*lead\\s*|\\s*createdDate\\s*|\\s*lastModified\\s*)", message = "{sort.byParam}") String sortByParam,
+
             @RequestParam(required = false, defaultValue = "asc")
-            @NotBlank @Pattern(regexp = "\\b(asc|desc)", message = "{sort.type}") String sortType) {
+            @NotBlank @Pattern(regexp = "(?i)(\\s*asc\\s*|\\s*desc\\s*)", message = "{sort.type}") String sortType) {
         if (pageSize == null)
             pageSize = defaultPageSize;
         return projectService.getProjects(pageNumber, pageSize, sortByParam, sortType);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ProjectRespDTO> getProject(@PathVariable Long id) {
+    public ResponseEntity<ProjectRespDTO> getProject(@PathVariable @Min(value = 1L, message = "{path.variable.id}") Long id) {
         return projectService.getProject(id);
     }
 
     @PostMapping
     public ResponseEntity<ProjectReqDTO> addProject(
-            @RequestBody ProjectReqDTO projectDTO) {
+           @Valid @RequestBody ProjectReqDTO projectDTO) {
         return projectService.addProject(projectDTO);
     }
 
     @PutMapping("{id}")
     public ResponseEntity<ProjectRespDTO> changeProject(
-            @PathVariable Long id,
-            @RequestBody ProjectReqDTO dto) {
-        return projectService.updateProject(id, dto);
+            @PathVariable @Min(value = 1L, message = "{path.variable.id}") Long id,
+            @Valid @RequestBody ProjectReqDTO projectDTO) {
+        return projectService.updateProject(id, projectDTO);
     }
 
     // DELETE   /projects/{projectID}
 
     @GetMapping("/search")
     public List<ProjectRespDTO> filter(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String key,
-            @RequestParam(required = false) String type,
-            @RequestParam(required = false) String lead,
+            @RequestParam(required = false)
+            @Pattern(regexp = ".*(\\S\\S\\S|\\S\\S\\S+).*", message = "{pattern.non-whitespace.characters.three}") String name,
+
+            @RequestParam(required = false)
+            @Pattern(regexp = ".*(\\S\\S\\S|\\S\\S\\S+).*", message = "{pattern.non-whitespace.characters.three}") String key,
+
+            @RequestParam(required = false)
+            @Pattern(regexp = ".*(\\S\\S\\S|\\S\\S\\S+).*", message = "{pattern.non-whitespace.characters.three}") String type,
+
+            @RequestParam(required = false)
+            @Pattern(regexp = ".*(\\S\\S\\S|\\S\\S\\S+).*", message = "{pattern.non-whitespace.characters.three}") String lead,
+
             @RequestParam(required = false) Date createdDate,
-            @RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-            @RequestParam(required = false) @Max(value = 15) Integer pageSize,
-            @RequestParam(required = false, defaultValue = "id") String sortByParam,
-            @RequestParam(required = false, defaultValue = "asc") String sortType
+
+            // Parameters for pagination and sorting
+            @RequestParam(required = false, defaultValue = "0")
+            @Min(value = 0L, message = "{page.number}") Integer pageNumber,
+
+            @RequestParam(required = false)
+            @Min(value = 3L, message = "{page.size}") Integer pageSize,
+
+            @RequestParam(required = false, defaultValue = "id")
+            @NotBlank @Pattern(regexp = "(\\s*id\\s*|\\s+projectName\\s*|\\s*key\\s*|\\s*projectType\\s*|\\s*lead\\s*|\\s*createdDate\\s*|\\s*lastModified\\s*)", message = "{sort.byParam}") String sortByParam,
+
+            @RequestParam(required = false, defaultValue = "asc")
+            @NotBlank @Pattern(regexp = "(\\s*asc\\s*|\\s*desc\\s*)", message = "{sort.type}") String sortType
     ) {
         if (pageSize == null)
             pageSize = defaultPageSize;
