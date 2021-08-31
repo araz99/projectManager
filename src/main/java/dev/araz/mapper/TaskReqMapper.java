@@ -26,14 +26,14 @@ public class TaskReqMapper implements MapperToEntity<TaskReqDTO, Task> {
     @Override
     public Task toEntity(TaskReqDTO dto) {
         return new Task(
-                dto.getTaskName(),
-                userService.getUserByName(dto.getAuthor()),
-                typeService.getIssueTypeByName(dto.getIssueType()),
-                priorityService.getPriorityByName(dto.getPriority()),
+                dto.getTaskName().trim(),
+                userService.getAuthenticationUser(),
+                typeService.getIssueTypeByName(dto.getIssueType().trim()),
+                priorityService.getPriorityByName(dto.getPriority().trim()),
                 statusService.getStatusByName("to do"),
                 new Date(System.currentTimeMillis()),
                 new Timestamp(System.currentTimeMillis()),
-                dto.getDescription()
+                dto.getDescription().trim()
                 );
     }
 }

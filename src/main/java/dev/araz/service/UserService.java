@@ -10,4 +10,6 @@ public interface UserService {
     ResponseEntity<UserDTO> addNewUser(UserDTO userDTO);
 
     User getUserByName(String username);
+
+    User getAuthenticationUser();
 }

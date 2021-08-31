@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -52,7 +53,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<ListTaskRespDTO> getTasks(Long projectId, Integer page, Integer size, String sortByParam, String type) {
-        PageRequest pageRequest = getPageRequest(page, size, sortByParam, type);
+        PageRequest pageRequest = getPageRequest(page, size, sortByParam.trim().toLowerCase(), type.trim().toLowerCase());
         return taskRepository.findAll(projectId, pageRequest)
                 .stream().map(taskListMapper::toDTO)
                 .collect(Collectors.toList());
@@ -96,11 +97,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskRespDTO> search(Long projectId, String name, String author, String executor, String type, String priority, String status, Date createdDate, Integer pageNumber, Integer pageSize, String sortByParam, String sortType) {
         Project project = projectService.getProjectById(projectId);
-        User taskAuthor = author == null ? null : userService.getUserByName(author);
-        User taskExecutor = executor == null ? null : userService.getUserByName(executor);
-        IssueType taskType = type == null ? null : typeService.getIssueTypeByName(type);
-        TaskPriority taskPriority = priority == null ? null : priorityService.getPriorityByName(priority);
-        TaskStatus taskStatus = status == null ? null : statusService.getStatusByName(status);
+        User taskAuthor = author == null ? null : userService.getUserByName(author.trim());
+        User taskExecutor = executor == null ? null : userService.getUserByName(executor.trim());
+        IssueType taskType = type == null ? null : typeService.getIssueTypeByName(type.trim());
+        TaskPriority taskPriority = priority == null ? null : priorityService.getPriorityByName(priority.trim());
+        TaskStatus taskStatus = status == null ? null : statusService.getStatusByName(status.trim());
         return taskRepository.findAll(
                 Specifications.<Task, Project>has(Task_project, project)
                         .and(Specifications.has(Task_name, name))
@@ -110,17 +111,15 @@ public class TaskServiceImpl implements TaskService {
                         .and(Specifications.has(Task_priority, taskPriority))
                         .and(Specifications.has(Task_status, taskStatus))
                         .and(Specifications.has(Task_date, createdDate)),
-                getPageRequest(pageNumber, pageSize, sortByParam, sortType)
+                getPageRequest(pageNumber, pageSize, sortByParam.trim().toLowerCase(), sortType.trim().toLowerCase())
         )
                 .stream().map(taskRespMapper::toDTO).collect(Collectors.toList());
     }
 
     private PageRequest getPageRequest(Integer page, Integer size, String sortByParam, String type) {
-        PageRequest pageRequest;
         if (type.equals("desc"))
-            pageRequest = PageRequest.of(page, size, Sort.by(sortByParam).descending());
+            return PageRequest.of(page, size, Sort.by(sortByParam).descending());
         else
-            pageRequest = PageRequest.of(page, size, Sort.by(sortByParam).ascending());
-        return pageRequest;
+            return PageRequest.of(page, size, Sort.by(sortByParam).ascending());
     }
 }

@@ -8,6 +8,8 @@ import dev.araz.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -50,6 +52,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (user != null)
             return user;
         throw new UserNotExist("User with name" + username + " not exists!");
+    }
+
+    @Override
+    public User getAuthenticationUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return userRepository.findByUsername(auth.getName());
     }
 
 

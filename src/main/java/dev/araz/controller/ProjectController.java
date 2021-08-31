@@ -6,6 +6,7 @@ import dev.araz.dto.ProjectRespDTO;
 import dev.araz.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +54,7 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<ProjectReqDTO> addProject(
-           @Valid @RequestBody ProjectReqDTO projectDTO) {
+            @Valid @RequestBody ProjectReqDTO projectDTO) {
         return projectService.addProject(projectDTO);
     }
 
@@ -80,7 +81,8 @@ public class ProjectController {
             @RequestParam(required = false)
             @Pattern(regexp = ".*(\\S\\S\\S|\\S\\S\\S+).*", message = "{pattern.non-whitespace.characters.three}") String lead,
 
-            @RequestParam(required = false) Date createdDate,
+            @RequestParam(required = false)
+            @DateTimeFormat(pattern = "yyyy/mm/dd") Date createdDate,
 
             // Parameters for pagination and sorting
             @RequestParam(required = false, defaultValue = "0")
