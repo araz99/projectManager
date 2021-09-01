@@ -7,6 +7,7 @@ import dev.araz.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -65,8 +66,6 @@ public class ProjectController {
         return projectService.updateProject(id, projectDTO);
     }
 
-    // DELETE   /projects/{projectID}
-
     @GetMapping("/search")
     public List<ProjectRespDTO> filter(
             @RequestParam(required = false)
@@ -100,5 +99,10 @@ public class ProjectController {
         if (pageSize == null)
             pageSize = defaultPageSize;
         return projectService.search(name, key, type, lead, createdDate, pageNumber, pageSize, sortByParam, sortType);
+    }
+
+    @DeleteMapping("{id}")
+    public HttpStatus deleteProject(@PathVariable @Min(value = 1L, message = "{path.variable.id}") Long id) {
+        return projectService.delete(id);
     }
 }

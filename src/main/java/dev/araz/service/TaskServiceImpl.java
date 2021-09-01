@@ -116,6 +116,15 @@ public class TaskServiceImpl implements TaskService {
                 .stream().map(taskRespMapper::toDTO).collect(Collectors.toList());
     }
 
+    @Override
+    public HttpStatus deleteTask(Long projectId, Long id) {
+        Optional<Task> task = taskRepository.findById(projectId, id);
+        if (task.isEmpty())
+            return HttpStatus.BAD_REQUEST;
+        taskRepository.deleteById(id);
+        return HttpStatus.OK;
+    }
+
     private PageRequest getPageRequest(Integer page, Integer size, String sortByParam, String type) {
         if (type.equals("desc"))
             return PageRequest.of(page, size, Sort.by(sortByParam).descending());

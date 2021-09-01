@@ -4,6 +4,7 @@ import dev.araz.dto.ListProjectsRespDTO;
 import dev.araz.dto.ProjectReqDTO;
 import dev.araz.dto.ProjectRespDTO;
 import dev.araz.entity.Project;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -23,4 +24,6 @@ public interface ProjectService {
     ResponseEntity<ProjectRespDTO> updateProject(Long id, ProjectReqDTO dto);
 
     List<ProjectRespDTO> search(String projectName, String projectKey, String projectType, String projectLead, Date createdDate, Integer pageNumber, Integer pageSize, String sortByParam, String sortType);
+
+    HttpStatus delete(Long id);
 }

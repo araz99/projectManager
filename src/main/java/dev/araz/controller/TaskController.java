@@ -8,6 +8,7 @@ import dev.araz.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -130,5 +131,11 @@ public class TaskController {
         );
     }
 
-    //DELETE task
+    @DeleteMapping("{id}")
+    public HttpStatus deleteTask(
+            @PathVariable @Min(value = 1L, message = "{path.variable.id}") Long projectId,
+            @PathVariable @Min(value = 1L, message = "{path.variable.id}") Long id
+    ) {
+        return taskService.deleteTask(projectId, id);
+    }
 }

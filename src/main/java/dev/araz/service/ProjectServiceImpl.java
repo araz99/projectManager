@@ -101,6 +101,20 @@ public class ProjectServiceImpl implements ProjectService {
                 .stream().map(projectMapperToDTO::toDTO).collect(Collectors.toList());
     }
 
+    @Override
+    public HttpStatus delete(Long id) {
+        Optional<Project> optionalProject = projectRepository.findById(id);
+        if (optionalProject.isPresent()) {
+            Project project = optionalProject.get();
+            if (project.getTasks().size() == 0 && project.getEmployees().size() == 0) {
+                projectRepository.deleteById(id);
+                return HttpStatus.OK;
+            } else
+                return HttpStatus.BAD_REQUEST;
+        }
+        return HttpStatus.BAD_REQUEST;
+    }
+
     private PageRequest getPageRequest(Integer pageNumber, Integer pageSize, String sortByParam, String sortType) {
         if (sortType.equals("desc"))
             return PageRequest.of(pageNumber, pageSize, Sort.by(sortByParam).descending());

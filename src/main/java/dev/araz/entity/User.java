@@ -41,10 +41,10 @@ public class User {
     private Set<Project> projects;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "executor")
+    @OneToMany(mappedBy = "executor",  cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Task> tasksForExecutor;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Task> tasksForAuthor;
 }
